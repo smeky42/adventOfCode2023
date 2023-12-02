@@ -29,25 +29,27 @@ def check_highest_numbers_of_color(record, color):
         if int(match) > highest: 
             highest = int(match)
 
-    return highest 
+    return highest
 
-# def sum_numbers_of_color(record, color):
-#     sum = 0
-#     matches = re.findall(r'(\d+)\s+' + color, record)
-#     for match in matches: 
-#         sum += int(match)
+def get_power_of_colors(record):
+    smallest_red = check_highest_numbers_of_color(record, "red")
+    smallest_blue = check_highest_numbers_of_color(record, "blue")
+    smallest_green = check_highest_numbers_of_color(record, "green")
+    return smallest_red * smallest_blue * smallest_green
 
-#     print(color + ": " + str(sum))
-#     return sum 
+
 
 file = open("input.txt", "r")
 
 sum = 0
+power_sum = 0
 
 for record in file:
     sum += get_id_of_valid_record(record)
+    power_sum += get_power_of_colors(record)
 
-print(sum)
+print("Sum of valid records: " + str(sum))
+print("Sum of the power of minimal colors: " + str(power_sum))
 
 file.close()
 
