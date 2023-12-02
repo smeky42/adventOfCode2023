@@ -1,7 +1,6 @@
 def concat_first_last_digit(string):
     return string[0] + string[-1]
     
-    
 def remove_non_digits(string):
     result = ""
     for char in string:
@@ -29,7 +28,6 @@ sum = 0
 
 for line in file:
     no_number_words = replace_words_with_numbers(line)
-    print(no_number_words)
     only_digits = remove_non_digits(no_number_words)
     first_last_concat = concat_first_last_digit(only_digits)
     sum += int(first_last_concat)
