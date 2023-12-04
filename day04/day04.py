@@ -1,6 +1,5 @@
 def check_card(card):
     splitted_card = card.split('|')
-    # print(card)
 
     list_one = splitted_card[0].split(':')[1].split()
     list_two = splitted_card[1].split()
@@ -8,23 +7,32 @@ def check_card(card):
     list_one = [int(num) for num in list_one]
     list_two = [int(num) for num in list_two]
 
-    points = 0
+    hits = 0
     for num in list_two:
         if num in list_one:
-            if points == 0:
-                points = 1
-            else: 
-                points = points * 2
+            hits += 1
 
-    # print(points)
-    return points
+    return hits
+
+def get_card_number(card):
+    split_strings = card.split(':')
+    card_string = split_strings[0].strip()
+    card_parts = card_string.split(' ')
+    card_number = int(card_parts[-1])
+
+    return int(card_number)
 
 
-file = open("input.txt", "r")
+with open("input.txt", "r") as file:
+    lines = file.readlines()
 
-sum = 0
+for index, card in enumerate(lines):
+    hits = check_card(card)
+    number = get_card_number(card)
+    # print(f"Line {index}: {card.strip()} has {hits} hits.")
+    for hit in range(hits): 
+        # print(f"Card {number + hit} is duplicated")
+        lines.append(lines[number + hit])
 
-for card in file:
-    sum += check_card(card)
     
-print(f"Points: {sum}")
+print(f"Cards: {len(lines)}")
