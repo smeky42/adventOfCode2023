@@ -54,52 +54,53 @@ with open("input.txt", "r") as file:
 
 location = sys.maxsize - 1
 
-visited_soil = []
-visited_fertilizer = []
-visited_water = []
-visited_light = []
-visited_temperature = []
-visited_humidity = []
+visited_soil = set()
+visited_fertilizer = set()
+visited_water = set()
+visited_light = set()
+visited_temperature = set()
+visited_humidity = set()
+visited_location = set()
 
 for start, seed_range in seeds:
     print(f"Working on {start}, with range {seed_range}")
     for seed in range(start, start + seed_range):
         mapped = map_to_map(seed, chunk_to_map(1))
-        if mapped in visited_soil: 
-            break
-        
-        visited_soil.append(mapped)
-        mapped = map_to_map(mapped, chunk_to_map(2))
-        if mapped in visited_fertilizer: 
-            break
-        
-        visited_fertilizer.append(mapped)
-        mapped = map_to_map(mapped, chunk_to_map(3))
-        if mapped in visited_water: 
-            break
-        
-        visited_water.append(mapped)
-        mapped = map_to_map(mapped, chunk_to_map(4))
-        if mapped in visited_light: 
-            break
-        
-        visited_light.append(mapped)
-        mapped = map_to_map(mapped, chunk_to_map(5))
-        if mapped in visited_temperature: 
-            break
-        
-        visited_temperature.append(mapped)
-        mapped = map_to_map(mapped, chunk_to_map(6))
+        visited_soil.add(mapped)
+    
+    print(f"Soil to visit: {len(visited_soil)}")
+    for soil in visited_soil:
+        mapped = map_to_map(soil, chunk_to_map(2))
+        visited_fertilizer.add(mapped)
 
-        if mapped in visited_humidity: 
-            break
-        
-        visited_humidity.append(mapped)
-        mapped = map_to_map(mapped, chunk_to_map(7))
+    print(f"Fertilizer to visit: {len(visited_fertilizer)}")
+    for fertilizer in visited_fertilizer:
+        mapped = map_to_map(fertilizer, chunk_to_map(3))
+        visited_water.add(mapped)
 
-        # print(f"Seed {seed} mapped to location {mapped}")
-        if(location > mapped):
-            location = mapped 
+    print(f"Water to visit: {len(visited_water)}")
+    for water in visited_water:
+        mapped = map_to_map(water, chunk_to_map(4))
+        visited_light.add(mapped)
+
+    print(f"Light to visit: {len(visited_light)}")
+    for light in visited_light:
+        mapped = map_to_map(light, chunk_to_map(5))
+        visited_temperature.add(mapped)
+
+    print(f"Temerature to visit: {len(visited_temperature)}")
+    for temperature in visited_temperature:
+        mapped = map_to_map(temperature, chunk_to_map(6))
+        visited_humidity.add(mapped)
+
+    print(f"Humidity to visit: {len(visited_humidity)}")
+    for humidity in visited_humidity:
+        mapped = map_to_map(humidity, chunk_to_map(7))
+        visited_location.add(mapped)
+
+    print(f"Minimal Visited in Set: {min(visited_location)}")
+
+
 
 print(f"Lowest location: {location}")
     
