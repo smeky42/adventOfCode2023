@@ -30,25 +30,28 @@ with open("input.txt", "r") as file:
 
     seeds = chunks[0].split(": ")[1].split()
     seeds = [int(num) for num in seeds]
+    seeds = list(zip(seeds[::2], seeds[1::2]))
+    print(seeds)
+
     
 
 # print(seeds)
 
-location = sys.maxsize
+location = sys.maxsize - 1
 
-for seed in seeds:
-   
-    mapped = map_to_map(seed, chunk_to_map(1))
-    mapped = map_to_map(mapped, chunk_to_map(2))
-    mapped = map_to_map(mapped, chunk_to_map(3))
-    mapped = map_to_map(mapped, chunk_to_map(4))
-    mapped = map_to_map(mapped, chunk_to_map(5))
-    mapped = map_to_map(mapped, chunk_to_map(6))
-    mapped = map_to_map(mapped, chunk_to_map(7))
+for start, seed_range in seeds:
+    for seed in range(start, start + seed_range):
+        mapped = map_to_map(seed, chunk_to_map(1))
+        mapped = map_to_map(mapped, chunk_to_map(2))
+        mapped = map_to_map(mapped, chunk_to_map(3))
+        mapped = map_to_map(mapped, chunk_to_map(4))
+        mapped = map_to_map(mapped, chunk_to_map(5))
+        mapped = map_to_map(mapped, chunk_to_map(6))
+        mapped = map_to_map(mapped, chunk_to_map(7))
 
-    print(f"Seed {seed} mapped to location {mapped}")
-    if(location > mapped):
-        location = mapped 
+        # print(f"Seed {seed} mapped to location {mapped}")
+        if(location > mapped):
+            location = mapped 
 
 print(f"Lowest location: {location}")
     
