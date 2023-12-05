@@ -1,16 +1,18 @@
 import os
 import sys
+import threading
+
 
 
 def chunk_to_map(id):
     map = chunks[id].split(":")[1].split(os.linesep)
     return [[int(n) for n in s.split()] for s in map if s]
 
-def map_to_map(seed,map):
+def map_to_map_reverse(seed,map):
     for mapping in map:
         # print(f"Check mapping {mapping}")
-        destination_range_start = mapping[0]
-        source_range_start = mapping[1]
+        destination_range_start = mapping[1]
+        source_range_start = mapping[0]
         range_length = mapping[2]
         
         if seed >= source_range_start and seed <= (source_range_start + range_length):
@@ -54,51 +56,32 @@ with open("input.txt", "r") as file:
 
 location = sys.maxsize - 1
 
-visited_soil = set()
-visited_fertilizer = set()
-visited_water = set()
-visited_light = set()
-visited_temperature = set()
-visited_humidity = set()
-visited_location = set()
+def reverse(start, end):
+    location = sys.maxsize - 1
+    print(f"started from {start} to {end}")
+    for seed in range(start, end):
+        mapped = map_to_map_reverse(seed, chunk_to_map(7))
+        mapped = map_to_map_reverse(mapped, chunk_to_map(6))
+        mapped = map_to_map_reverse(mapped, chunk_to_map(5))
+        mapped = map_to_map_reverse(mapped, chunk_to_map(4))
+        mapped = map_to_map_reverse(mapped, chunk_to_map(3))
+        mapped = map_to_map_reverse(mapped, chunk_to_map(2))
+        mapped = map_to_map_reverse(mapped, chunk_to_map(1))
 
-for start, seed_range in seeds:
-    print(f"Working on {start}, with range {seed_range}")
-    for seed in range(start, start + seed_range):
-        mapped = map_to_map(seed, chunk_to_map(1))
-        visited_soil.add(mapped)
+        for start, seed_range in seeds:
+            if(start <= mapped <= (start + seed_range)):
+                # print(f"{seed} -> {mapped}")
+                if seed < location:
+                    location = seed
     
-    print(f"Soil to visit: {len(visited_soil)}")
-    for soil in visited_soil:
-        mapped = map_to_map(soil, chunk_to_map(2))
-        visited_fertilizer.add(mapped)
+    print(f"Lowests location of batch: {location}")
 
-    print(f"Fertilizer to visit: {len(visited_fertilizer)}")
-    for fertilizer in visited_fertilizer:
-        mapped = map_to_map(fertilizer, chunk_to_map(3))
-        visited_water.add(mapped)
-
-    print(f"Water to visit: {len(visited_water)}")
-    for water in visited_water:
-        mapped = map_to_map(water, chunk_to_map(4))
-        visited_light.add(mapped)
-
-    print(f"Light to visit: {len(visited_light)}")
-    for light in visited_light:
-        mapped = map_to_map(light, chunk_to_map(5))
-        visited_temperature.add(mapped)
-
-    print(f"Temerature to visit: {len(visited_temperature)}")
-    for temperature in visited_temperature:
-        mapped = map_to_map(temperature, chunk_to_map(6))
-        visited_humidity.add(mapped)
-
-    print(f"Humidity to visit: {len(visited_humidity)}")
-    for humidity in visited_humidity:
-        mapped = map_to_map(humidity, chunk_to_map(7))
-        visited_location.add(mapped)
-
-    print(f"Minimal Visited in Set: {min(visited_location)}")
+    
+for i in range(50, 60):
+    start = i * 100000
+    end = start + 100000 -1
+    t = threading.Thread(target=reverse, args=(start, end))
+    t.start()
 
 
 
