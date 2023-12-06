@@ -1,7 +1,7 @@
 
 
 def possible_button_press_times(time, dist): 
-    # print(f"Record Time: {time}, Distance: {dist}")
+    print(f"Record Time: {time}, Distance: {dist}")
 
     possible = 0
     for i in range(time):
@@ -17,7 +17,12 @@ def possible_button_press_times(time, dist):
     print(f"Possible: {possible}")
     return possible
 
-
+def crunch_list(mylist):
+ 
+    result = ""
+    for x in mylist:
+        result = result + x 
+    return int(result)
 
 with open("input.txt", "r") as file:
     lines = file.readlines()
@@ -34,3 +39,9 @@ with open("input.txt", "r") as file:
          i += 1
 
     print(f"Possible Multiplied: {possible_mult}")
+
+
+    time.pop(0)
+    dist.pop(0)
+    possible_button_press_times(crunch_list(time),crunch_list(dist))
+
