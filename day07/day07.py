@@ -117,7 +117,3 @@ hands = multiply_numbers_with_rank(hands)
 # print(f"Multiply {hands}")
 print(f"Sum {sum(hands)}")
 
-# hand = 'JJ44J'
-# print (hand)
-# print (hand.replace('J', find_leading_card(hand,2)))
-# print (poker_hand_ranking(hand))
