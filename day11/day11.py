@@ -49,6 +49,17 @@ def enumerate_galaxies(galaxies):
 def count_stars(coord1, coord2):
     x1, y1 = coord1
     x2, y2 = coord2
+    if y1 > y2:
+        y = y1 
+        y1 = y2 
+        y2 = y
+
+    if x1 > x2:
+        x = x1 
+        x1 = x2 
+        x2 = x
+
+
     count = 0
     x1 = int(x1)
     x2 = int(x2)
@@ -57,21 +68,25 @@ def count_stars(coord1, coord2):
 
     for i in range(x1, x2):
         if galaxies[i][y1] == "*":
+            count += 1000000
+        else: 
             count += 1
     
     for j in range(y1, y2):
         if galaxies[x1][j] == "*":
+            count += 1000000
+        else: 
             count += 1
     
-    return count * 10
+    return count
 
 def calculate_distance(coord1, coord2):
     x1, y1 = coord1
     x2, y2 = coord2
         
-    return abs(x1-x2) + abs(y1-y2) + count_stars(coord1,coord2)
+    return abs(x1-x2) + abs(y1-y2)
 
-filename = 'input_test.txt'
+filename = 'input.txt'
 galaxies = read_file_to_2d_array(filename)
 galaxies = expand_old_universe(galaxies)
 print_2d_char_array(galaxies)
@@ -83,16 +98,21 @@ print(f"There are {galaxy_count} galaxies")
 
 arr = np.array(galaxies)
 dist_all = 0
+dist_stars_all = 0
 for i in range(1, galaxy_count+1):
     start_galaxy = np.where(arr == str(i))
     for j in range(i+1, galaxy_count+1):
-        end_galaxy = np.where(arr == str(j)) 
+        end_galaxy = np.where(arr == str(j))
         dist = calculate_distance(start_galaxy,end_galaxy)
+        dist_stars = count_stars(start_galaxy,end_galaxy)
         dist_all += dist
-        # print(f"From {i} to {j} : {dist}")
+        dist_stars_all += dist_stars
+        # print(f"From {i} to {j} : {dist_stars} ")
+        # print(f"Stars: {count_stars(start_galaxy, end_galaxy)}")
 
 
 print(f"Distance between all Galaxies: {dist_all}")
+print(f"Distance between all Galaxies expanded: {dist_stars_all}")
 
 
-count_stars(coord1, coord2)
+print(f"Stars: {count_stars(np.where(arr == '2'), np.where(arr == '8'))}")
