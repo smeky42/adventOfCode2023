@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(15000)
+
 def print_2d_char_array(two_d_array):
     rows_as_strings = [''.join(row) for row in two_d_array]
     all_rows = '\n'.join(rows_as_strings)
@@ -26,7 +29,7 @@ def get_height(filename):
                 min_height = height 
         
     print(f"Height: {min_height} to {max_height} -> {abs(min_height) + abs(max_height) + 1}")
-    return min_height, abs(min_height) + abs(max_height) + 1
+    return abs(min_height), abs(min_height) + abs(max_height) + 1
 
 def get_widht(filename):
     with open(filename, 'r') as file:
@@ -51,7 +54,7 @@ def get_widht(filename):
                 min_width = width 
         
     print(f"Width: {min_width} to {max_width} -> {abs(min_width) + abs(max_width) + 1}")
-    return min_width, abs(min_width) + abs(max_width) + 1
+    return abs(min_width), abs(min_width) + abs(max_width) + 1
 
 def dig(start_x, start_y,filename):
     x = start_x
@@ -84,34 +87,26 @@ def dig_cube(x, y, d, m):
         return x + m, y
     
 
-def fill():
-    for y, row in enumerate(ground):
-        inside = False
-        lastfield = "."
-        nextfield = "."
-        for x, cell in enumerate(row):
-            if x + 1 < len(row):
-                nextfield = ground[y][x+1]
+def fill(x,y):
+    queue = [(x, y)]
+    while queue:
+        x, y = queue.pop()
 
-            if lastfield == "." and cell == "#" and not inside:
-                # on pipe
-                ground[y][x] = "+"
-                inside = True
-            
-            elif lastfield == "." and cell == "#" and inside:
-                # on pipe
-                ground[y][x] = "-"
-                inside = False
+        # print(f"{x},{y}")
+        if ground[y][x] == ".":  
+            ground[y][x] = "#" 
 
-            elif cell == "#" and nextfield == "." and inside:
-                # off pipe
-                ground[y][x] = "-"
-                inside = True 
-            
+            if x > 0:
+                queue.append((x-1,y))
+            if x < len(ground[y]) - 1:
+                queue.append((x+1,y))
+            if y > 0:
+                queue.append((x,y-1))
+            if y < len(ground) - 1:
+                queue.append((x,y+1))
 
-            lastfield = ground[y][x]
-        
 
+    
 
 def count_hash():
     count = 0
@@ -123,15 +118,15 @@ def count_hash():
 
     return count
 
-filename = 'input_test.txt'
+filename = 'input.txt'
 start_x, width = get_widht(filename)
 start_y, height = get_height(filename)
-ground = [["." for _ in range(height*8)] for _ in range(width*8)]
+ground = [["." for _ in range(height*2 + 2)] for _ in range(width*2 + 2)]
 
-dig(start_x*4, start_y*4,filename)
-# ground[start_y*4][start_x*4] = "S"
-print_2d_char_array(ground)
+dig(start_x+1, start_y+1,filename)
+ground[start_y+1][start_x+1] = "S"
+# print_2d_char_array(ground)
 print("\n\n")
-fill()
+fill(start_x+2,start_y+1)
 print_2d_char_array(ground)
-print(f"Count: {count_hash()}")
+print(f"Count: {count_hash() + 1}")
