@@ -26,14 +26,15 @@ def find_divisors(n):
     return divisors
 
 def walk(x,y, steps):
-    print(f"Walk {steps} steps")
     queue = [(x, y, steps)]
     while queue:
         x, y, steps = queue.pop()
+        rest_steps = max_steps - steps
 
         if steps == max_steps:
             endpoints.add((x,y))
-        elif steps < max_steps:
+        elif steps < max_steps and (x,y,rest_steps) not in already_tried:
+            already_tried.add((x,y,rest_steps))
             print(f"{x},{y} {steps}")
             
             if x > 0 and ground[y][x-1] != "#":
@@ -51,6 +52,7 @@ def walk(x,y, steps):
 max_steps = 64
 # divisors = find_divisors(max_steps)
 endpoints = set()
+already_tried = set()
 ground = read_file_to_2d_array("input.txt")
 x, y = find_start(ground)
 walk(x,y, 0)
