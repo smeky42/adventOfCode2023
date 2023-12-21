@@ -35,8 +35,8 @@ def walk(x,y, steps):
             endpoints.add((x,y))
         elif steps < max_steps and (x,y,rest_steps) not in already_tried:
             already_tried.add((x,y,rest_steps))
-            print(f"{x},{y} {steps}")
-            
+            print(f'\r{len(endpoints)} - {x},{y} {steps}', end='', flush=True)
+        
             if x > 0 and ground[y][x-1] != "#":
                 queue.append((x-1,y,steps+1))
             if x < len(ground[y]) - 1 and ground[y][x+1] != "#":
@@ -48,14 +48,32 @@ def walk(x,y, steps):
     
     return queue
 
+def duplicate_array_horizontal(array, times):
+    duplicated_array = [row * times + row * times for row in array]
+    return duplicated_array
 
-max_steps = 64
+def duplicate_array_vertically(array, times):
+    duplicated_array = array * times + array * times
+    return duplicated_array
+
+
+def blow_up(array, times):
+    array = duplicate_array_horizontal(array, times)
+    return duplicate_array_vertically(array, times)
+
+max_steps = 1000
 # divisors = find_divisors(max_steps)
 endpoints = set()
 already_tried = set()
-ground = read_file_to_2d_array("input.txt")
+ground = read_file_to_2d_array("input_test2.txt")
 x, y = find_start(ground)
-walk(x,y, 0)
+
+blow_factor = 100
+start_x = blow_factor * len(ground[y]) + x
+start_y = blow_factor * len(ground) + y  
+ground = blow_up(ground, blow_factor)
+
+walk(start_x,start_y, 0)
 
 # for divisor in divisors:
 #     walk(x, y, divisor)
